@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter your city" spellcheck="false">
+            <button><img src="images/search.png" /></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" class="weather-icon">
+            <h1 class="temp">8°c</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png">
+
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <img src="images/wind.png">
+                    <div>
+                        <p class="wind">50%</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // const apiurl = "https://api.openweathermap.org/data/2.5/weather?unit=metrics&q="
+        // const apikey = "84df08c70f5c407eb560e37be4409b77"
+
+       const APIURL="https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"
+       const APIEND = 'unitGroup=metric&contentType=json'    
+       const APIKEY="BDEZWVH3Y3KFYEDDGZNYCC8Y9"
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button ");
+
+        const weatherIcon = document.querySelector(".weather-icon");
+
+        async function checkWeather(city) {
+            // const response = await fetch(apiurl + city + `&appid=${apikey}`)
+            const response= await fetch(APIURL+city+"?"+APIEND+`&key=${APIKEY}`)
+            let data = await response.json();
+
+            console.log(data)
+
+            // this is the code to update the elemenys according to the api 1st will select query and thn update with help of innerhtml
+            // document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".city").innerHTML= data.resolvedAddress;
+            document.querySelector(".temp").innerHTML = Math.round(data.currentConditions.temp) + "°c";
+            document.querySelector(".humidity").innerHTML = data.currentConditions.humidity + "%"; // Fix the class name
+            document.querySelector(".wind").innerHTML = data.currentConditions.windspeed + "km/hr";
+
+            // if (data.weather[0].main == "Clouds") {
+            //     weatherIcon.src = "images/clouds.png"
+            // }
+            if(data.currentConditions.conditions == "Clear"){
+                weatherIcon.src="images/clear.png"
+            }
+            else if (data.currentConditions.conditions== "Clear") {
+                weatherIcon.src = "images/clear.png"
+            }
+            else if (data.currentConditions.conditions== "Rain") {
+                weatherIcon.src = "images/rain.png"
+            }
+            else if (data.currentConditions.conditions == "Drizzle") {
+                weatherIcon.src = "images/drizzle.png"
+            }
+            else if (data.currentConditions.conditions == "Mist") {
+                weatherIcon.src = "images/mist.png"
+            }
+
+            // document.querySelector(".weather").style.display = "block";
+
+
+        }
+        // here when we will click on search button then we will call check weather function 
+        searchBtn.addEventListener("click", () => {
+
+            checkWeather(searchBox.value);
+
+
+        })
+    </script>
+
+</body>
+
+</html>
